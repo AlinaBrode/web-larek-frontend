@@ -1,6 +1,6 @@
-import { SellItemAPI } from './components/SellItemAPI';
+import { SellItemAPI } from './components/sell-item-api';
 import './scss/styles.scss';
-import { RepoModel } from './components/RepoModel';
+import { RepoModel } from './components/repo-model';
 import { SellItem } from './types/sellitem';
 import { API_URL } from './utils/constants';
 import { cloneTemplate, ensureElement } from './utils/utils';
@@ -8,6 +8,7 @@ import { Gallery } from './components/gallery';
 import { GalleryCard } from './components/gallery-card';
 import { EventEmitter } from './components/base/events';
 import { Basket } from './components/basket-popup';
+import { CardPopup } from './components/card-popup';
 
 /*
   Описание данных
@@ -56,7 +57,11 @@ function getSellItems() {
 
 events.on('items: changed', () => {
 	gallery.galleryItems = bm.getCatalogItems().map((item) => {
-		const card = new GalleryCard(cloneTemplate('#card-catalog'));
+		const card = new GalleryCard(
+			cloneTemplate('#card-catalog'),
+			events,
+			item.id
+		);
 		return card.render(item);
 	});
 });
@@ -64,7 +69,10 @@ events.on('items: changed', () => {
 getSellItems();
 
 let modalContainerElement = ensureElement('#modal-container');
-let modalContentElement = ensureElement('.modal__content', modalContainerElement);
+let modalContentElement = ensureElement(
+	'.modal__content',
+	modalContainerElement
+);
 
 let basket = new Basket(modalContainerElement, modalContentElement);
 
@@ -75,5 +83,16 @@ basketElement.addEventListener('click', () => {
 });
 
 
+let cardPopup = new CardPopup(modalContainerElement, modalContentElement);
+
+interface ICardID {
+	card_id: string
+}
+
+events.on('click: on_gallery_card', (id: ICardID) => {
+	cardPopup.sv(true);
+	cardPopup.render(bm.getSellItem(id.card_id));
+});
 
 
+// TODO: think about collision of Basket and CardPopup 
