@@ -18,24 +18,24 @@ export class CardPopup extends Component<ICardPopup> implements ICardPopup {
 	protected elementDescription: HTMLElement;
 	protected elementPrice: HTMLElement;
 	protected elementImage: HTMLImageElement;
+	protected cardPreviewBody: HTMLElement;
 
 	constructor(container: HTMLElement, content: HTMLElement) {
 		super(container);
 		this.content = content;
 
-		let cardPreviewBody = cloneTemplate('#card-preview');
-		this.content.replaceChildren(cardPreviewBody);
+		this.cardPreviewBody = cloneTemplate('#card-preview');
 
-    this.elementCategory = ensureElement('.card__category', this.container);
-		this.elementTitle = ensureElement('.card__title', this.container);
+    this.elementCategory = ensureElement('.card__category', this.cardPreviewBody);
+		this.elementTitle = ensureElement('.card__title', this.cardPreviewBody);
 		this.elementDescription = ensureElement(
 			'.card__text',
-			this.container
+			this.cardPreviewBody
 		);
-		this.elementPrice = ensureElement('.card__price', this.container);
+		this.elementPrice = ensureElement('.card__price', this.cardPreviewBody);
 		this.elementImage = ensureElement<HTMLImageElement>(
 			'.card__image',
-			this.container
+			this.cardPreviewBody
 		);
 
 
@@ -64,6 +64,9 @@ export class CardPopup extends Component<ICardPopup> implements ICardPopup {
 	}
 
 	sv(v: boolean) {
+		if (v) {
+			this.content.replaceChildren(this.cardPreviewBody);
+		}
 		this.toggleClass(this.container, 'modal_active', v);
 	}
 }
