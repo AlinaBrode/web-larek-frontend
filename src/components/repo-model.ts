@@ -16,7 +16,7 @@ export class RepoModel implements IRepo {
   }
 
   setItems(newContent: SellItem[]): void {
-    this.repoContent = newContent.map(item => ({... item, inBasket: true}));
+    this.repoContent = newContent.map(item => ({... item, inBasket: false}));
     this.events.emit('items: changed');
   }
 
@@ -51,13 +51,16 @@ export class RepoModel implements IRepo {
     return inBasket;
   }
 
-  toBasket(id: string): void {
-    this.repoContent.filter(item => item.id === id)[0].inBasket = false;
+  toggleBasketState(id: string): void {
+    let item = this.repoContent.filter(item => item.id === id)[0];
+    item.inBasket = !item.inBasket;
     this.events.emit('items: changed');
   }
 
-  fromBasket(id: string): void {
-    this.repoContent.filter(item => item.id === id)[0].inBasket = true;
-    this.events.emit('items: changed');
+  inBasket(id: string): boolean {
+    if (!id) {
+      return false;
+    }
+    return this.repoContent.filter(item => item.id === id)[0].inBasket;
   }
 }

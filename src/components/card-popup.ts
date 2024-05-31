@@ -1,6 +1,7 @@
 import { Component } from './base/components';
 import { cloneTemplate, ensureElement } from '../utils/utils';
 import { CDN_URL } from '../utils/constants';
+import { IEvents } from './base/events';
 
 export interface ICardPopup {
 	category: string;
@@ -8,6 +9,8 @@ export interface ICardPopup {
 	description: string;
 	price: number;
 	image: string;
+	id:string;
+	inBasket: boolean;
 }
 
 export class CardPopup extends Component<ICardPopup> implements ICardPopup {
@@ -19,8 +22,10 @@ export class CardPopup extends Component<ICardPopup> implements ICardPopup {
 	protected elementPrice: HTMLElement;
 	protected elementImage: HTMLImageElement;
 	protected cardPreviewBody: HTMLElement;
+	protected basketPutGetButton: HTMLButtonElement;
+	protected itemId:string;
 
-	constructor(container: HTMLElement, content: HTMLElement) {
+	constructor(container: HTMLElement, content: HTMLElement, events: IEvents) {
 		super(container);
 		this.content = content;
 
@@ -37,6 +42,13 @@ export class CardPopup extends Component<ICardPopup> implements ICardPopup {
 			'.card__image',
 			this.cardPreviewBody
 		);
+		this.basketPutGetButton = ensureElement<HTMLButtonElement>(
+			'.card__button',
+			this.cardPreviewBody
+		);
+		this.basketPutGetButton.addEventListener('click',
+		()=>events.emit('put-get-item',{itemId: this.itemId}));
+		
 
 
 		let closeButton = ensureElement('.modal__close', this.container);
@@ -61,6 +73,18 @@ export class CardPopup extends Component<ICardPopup> implements ICardPopup {
 	set image(val: string) {
 		this.elementImage.src = CDN_URL + val;
 		this.elementImage.alt = 'картинка товара';
+	}
+
+	set id(val:string){
+		this.itemId = val;
+	}
+
+	get id(){
+		return this.itemId;
+	}
+
+	set inBasket(val: boolean) {
+		this.basketPutGetButton.textContent = val ? "Из корзины" : "В корзину";
 	}
 
 	sv(v: boolean) {

@@ -74,7 +74,7 @@ let modalContentElement = ensureElement(
 	modalContainerElement
 );
 
-let basket = new Basket(modalContainerElement, modalContentElement);
+let basket = new Basket(modalContainerElement, modalContentElement, events);
 
 let basketElement = ensureElement('.header__basket');
 basketElement.addEventListener('click', () => {
@@ -82,17 +82,25 @@ basketElement.addEventListener('click', () => {
 	basket.sv(true);
 });
 
-
-let cardPopup = new CardPopup(modalContainerElement, modalContentElement);
+let cardPopup = new CardPopup(modalContainerElement, modalContentElement,events);
 
 interface ICardID {
 	card_id: string
 }
 
 events.on('click: on_gallery_card', (id: ICardID) => {
-	cardPopup.sv(true);
+	cardPopup.id = id.card_id;
+	console.log('set id', id.card_id, cardPopup.id);
 	cardPopup.render(bm.getSellItem(id.card_id));
+	cardPopup.inBasket = bm.inBasket(cardPopup.id);
+	cardPopup.sv(true);
 });
 
+interface IPutGetEvent {itemId: string};
 
-// TODO: think about collision of Basket and CardPopup 
+events.on('click: basket_button', () => {console.log("basket button clicked")});
+events.on('put-get-item',(evt: IPutGetEvent)=>bm.toggleBasketState(evt.itemId));
+events.on('items: changed',()=>{
+	console.log('card popup id', cardPopup.id);
+	if (cardPopup.id) {cardPopup.inBasket = bm.inBasket(cardPopup.id)}
+});
