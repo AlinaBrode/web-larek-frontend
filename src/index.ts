@@ -9,6 +9,7 @@ import { GalleryCard } from './components/gallery-card';
 import { EventEmitter } from './components/base/events';
 import { Basket } from './components/basket-popup';
 import { CardPopup } from './components/card-popup';
+import { BasketButton } from './components/basket-button';
 
 /*
   Описание данных
@@ -104,3 +105,6 @@ events.on('items: changed',()=>{
 	console.log('card popup id', cardPopup.id);
 	if (cardPopup.id) {cardPopup.inBasket = bm.inBasket(cardPopup.id)}
 });
+
+let basketButton = new BasketButton(basketElement);
+events.on('items: changed', () => {basketButton.basketCounter = bm.busketItemsNumber()});
