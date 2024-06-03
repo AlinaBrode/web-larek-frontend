@@ -10,6 +10,7 @@ import { EventEmitter } from './components/base/events';
 import { Basket } from './components/basket-popup';
 import { CardPopup } from './components/card-popup';
 import { BasketButton } from './components/basket-button';
+import { BasketCard } from './components/basket-card';
 
 /*
   Описание данных
@@ -82,6 +83,11 @@ basketElement.addEventListener('click', () => {
 	console.log('basket click');
 	basket.sv(true);
 });
+
+events.on('items: changed', () => {basket.basketItems = bm.getBasketItems().map(element=>{
+	let htmlElement = new BasketCard(cloneTemplate('#card-basket'),events,element.id);
+	return htmlElement.render(element);
+})});
 
 let cardPopup = new CardPopup(modalContainerElement, modalContentElement,events);
 
