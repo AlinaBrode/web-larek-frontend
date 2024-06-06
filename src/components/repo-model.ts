@@ -36,7 +36,9 @@ export class RepoModel implements IRepo {
   getTotalSum(): number {
     let s = 0;
     for (let item of this.repoContent) {
-      s += item.price;  //s = s + item.price
+      if (item.inBasket) {
+        s += item.price;  //s = s + item.price
+      }
     }
     return s;
   }

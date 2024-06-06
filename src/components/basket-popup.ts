@@ -4,6 +4,7 @@ import { IEvents } from './base/events';
 
 export interface IBasket {
 	basketItems: HTMLElement[];
+	bastetItemsNumber: number;
 }
 
 export class Basket extends Component<IBasket> implements IBasket {
@@ -11,6 +12,7 @@ export class Basket extends Component<IBasket> implements IBasket {
 	protected basketList: HTMLElement;
 	protected basketBody: HTMLElement;
 	protected basketButton: HTMLButtonElement;
+	protected basketItemsNumberElement: HTMLElement;
 
 	constructor(container: HTMLElement, content: HTMLElement, events: IEvents) {
 		super(container);
@@ -22,7 +24,11 @@ export class Basket extends Component<IBasket> implements IBasket {
 			'.basket__button',
 			this.basketBody
 		);
-
+		this.basketItemsNumberElement = ensureElement(
+			'.basket__price',
+			this.basketBody
+		);
+		console.log('price element', this.basketItemsNumberElement);
 		let closeButton = ensureElement('.modal__close', this.container);
 		closeButton.addEventListener('click', () => {
 			this.sv(false);
@@ -35,6 +41,10 @@ export class Basket extends Component<IBasket> implements IBasket {
 
 	set basketItems(items: HTMLElement[]) {
 		this.basketList.replaceChildren(...items);
+	}
+
+	set bastetItemsNumber(val: number) {
+		this.basketItemsNumberElement.textContent = String(val) + " синапсов";
 	}
 
 	sv(v: boolean) {

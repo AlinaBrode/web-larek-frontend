@@ -89,6 +89,10 @@ events.on('items: changed', () => {basket.basketItems = bm.getBasketItems().map(
 	return htmlElement.render(element);
 })});
 
+events.on('items: changed',()=>{
+	basket.bastetItemsNumber = bm.getTotalSum();
+});
+
 let cardPopup = new CardPopup(modalContainerElement, modalContentElement,events);
 
 interface ICardID {
@@ -114,3 +118,6 @@ events.on('items: changed',()=>{
 
 let basketButton = new BasketButton(basketElement);
 events.on('items: changed', () => {basketButton.basketCounter = bm.busketItemsNumber()});
+
+events.on('click: delete__card',(item:ICardID)=>{bm.toggleBasketState(item.card_id)});
+// events.on('items: changed', () => {basketButton.basketCounter = bm.busketItemsNumber()});
