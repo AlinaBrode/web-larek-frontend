@@ -11,30 +11,16 @@ import { Basket } from './components/basket-popup';
 import { CardPopup } from './components/card-popup';
 import { BasketButton } from './components/basket-button';
 import { BasketCard } from './components/basket-card';
+import { PersonalInfoFirst } from './components/personal-info-first';
+import { PersonalInfoSecond } from './components/personal-info-second';
+import { PersonalInfoModel } from './components/personal-info-model';
 
 /*
   Описание данных
 */
 
-enum PaymentTypeEnum {
-	ONLINE = 0,
-	ON_DELIVERY = 1,
-}
-
-export interface IDeliveryDetails {
-	paymentType: PaymentTypeEnum;
-	address: string;
-	email: string;
-	phone: string;
-}
-
-//Про персональные данные
-export interface IPersonalInfo {
-	setInfo(info: Partial<IDeliveryDetails>): void;
-	getInfo(): IDeliveryDetails;
-}
-
 let events = new EventEmitter();
+let personalInfoModel = new PersonalInfoModel(events);
 
 let apiFetch = new SellItemAPI(API_URL);
 let bm = new RepoModel(events);
@@ -109,7 +95,6 @@ events.on('click: on_gallery_card', (id: ICardID) => {
 
 interface IPutGetEvent {itemId: string};
 
-events.on('click: basket_button', () => {console.log("basket button clicked")});
 events.on('put-get-item',(evt: IPutGetEvent)=>bm.toggleBasketState(evt.itemId));
 events.on('items: changed',()=>{
 	console.log('card popup id', cardPopup.id);
@@ -121,3 +106,11 @@ events.on('items: changed', () => {basketButton.basketCounter = bm.busketItemsNu
 
 events.on('click: delete__card',(item:ICardID)=>{bm.toggleBasketState(item.card_id)});
 // events.on('items: changed', () => {basketButton.basketCounter = bm.busketItemsNumber()});
+
+let paymentType = new PersonalInfoFirst(modalContainerElement,events);
+events.on('click: basket_button', () => {paymentType.sv(true)});
+
+let personalInfo = new PersonalInfoSecond(modalContainerElement,events);
+events.on('click: personal_info_first_next', () => {paymentType.sv(true)});
+console.log('personalInfo', personalInfo);
+
