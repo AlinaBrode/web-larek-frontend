@@ -2,6 +2,7 @@ import { SellItemAPI } from './components/sell-item-api';
 import './scss/styles.scss';
 import { RepoModel } from './components/repo-model';
 import { SellItem } from './types/sellitem';
+import { PaymentTypeEnum } from './types/index';
 import { API_URL } from './utils/constants';
 import { cloneTemplate, ensureElement } from './utils/utils';
 import { Gallery } from './components/gallery';
@@ -70,19 +71,29 @@ basketElement.addEventListener('click', () => {
 	basket.sv(true);
 });
 
-events.on('items: changed', () => {basket.basketItems = bm.getBasketItems().map(element=>{
-	let htmlElement = new BasketCard(cloneTemplate('#card-basket'),events,element.id);
-	return htmlElement.render(element);
-})});
+events.on('items: changed', () => {
+	basket.basketItems = bm.getBasketItems().map((element) => {
+		let htmlElement = new BasketCard(
+			cloneTemplate('#card-basket'),
+			events,
+			element.id
+		);
+		return htmlElement.render(element);
+	});
+});
 
-events.on('items: changed',()=>{
+events.on('items: changed', () => {
 	basket.bastetItemsNumber = bm.getTotalSum();
 });
 
-let cardPopup = new CardPopup(modalContainerElement, modalContentElement,events);
+let cardPopup = new CardPopup(
+	modalContainerElement,
+	modalContentElement,
+	events
+);
 
 interface ICardID {
-	card_id: string
+	card_id: string;
 }
 
 events.on('click: on_gallery_card', (id: ICardID) => {
@@ -93,24 +104,51 @@ events.on('click: on_gallery_card', (id: ICardID) => {
 	cardPopup.sv(true);
 });
 
-interface IPutGetEvent {itemId: string};
+interface IPutGetEvent {
+	itemId: string;
+}
 
-events.on('put-get-item',(evt: IPutGetEvent)=>bm.toggleBasketState(evt.itemId));
-events.on('items: changed',()=>{
+events.on('put-get-item', (evt: IPutGetEvent) =>
+	bm.toggleBasketState(evt.itemId)
+);
+events.on('items: changed', () => {
 	console.log('card popup id', cardPopup.id);
-	if (cardPopup.id) {cardPopup.inBasket = bm.inBasket(cardPopup.id)}
+	if (cardPopup.id) {
+		cardPopup.inBasket = bm.inBasket(cardPopup.id);
+	}
 });
 
 let basketButton = new BasketButton(basketElement);
-events.on('items: changed', () => {basketButton.basketCounter = bm.busketItemsNumber()});
+events.on('items: changed', () => {
+	basketButton.basketCounter = bm.busketItemsNumber();
+});
 
-events.on('click: delete__card',(item:ICardID)=>{bm.toggleBasketState(item.card_id)});
+events.on('click: delete__card', (item: ICardID) => {
+	bm.toggleBasketState(item.card_id);
+});
 // events.on('items: changed', () => {basketButton.basketCounter = bm.busketItemsNumber()});
 
-let paymentType = new PersonalInfoFirst(modalContainerElement,events);
-events.on('click: basket_button', () => {paymentType.sv(true)});
+let paymentType = new PersonalInfoFirst(modalContainerElement, events);
+events.on('click: basket_button', () => {
+	paymentType.sv(true);
+});
 
-let personalInfo = new PersonalInfoSecond(modalContainerElement,events);
-events.on('click: personal_info_first_next', () => {paymentType.sv(true)});
+let personalInfo = new PersonalInfoSecond(modalContainerElement, events);
+events.on('click: personal_info_first_next', () => {
+	paymentType.sv(true);
+});
 console.log('personalInfo', personalInfo);
 
+events.on('click: card payment', () => {
+	Object.assign(personalInfoModel, { paymentType: PaymentTypeEnum.ONLINE });
+});
+
+events.on('click: cash payment', () => {
+	Object.assign(personalInfoModel, {
+		paymentType: PaymentTypeEnum.ON_DELIVERY,
+	});
+});
+
+events.on('items: changed', () => {
+	paymentType.render({paymentType: personalInfoModel.paymentType});
+});

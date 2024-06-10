@@ -1,5 +1,5 @@
 import { IEvents } from "./base/events";
-
+import { IPersonalInfoModel, PaymentTypeEnum } from "../types";
 
 
 export class PersonalInfoModel implements IPersonalInfoModel {
@@ -7,7 +7,7 @@ export class PersonalInfoModel implements IPersonalInfoModel {
   protected _address: string;
   protected _email: string;
   protected _phone: string;
-  events:IEvents;
+  protected events:IEvents;
 
   constructor(events:IEvents) {
     this.events = events;
