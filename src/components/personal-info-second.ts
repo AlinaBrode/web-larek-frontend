@@ -10,10 +10,14 @@ export interface IPersonalInfoSecond {
 export class PersonalInfoSecond
 extends Component<IPersonalInfoSecond>
 implements IPersonalInfoSecond {
-  body:HTMLElement;
+ protected body:HTMLElement;
+  protected events:IEvents;
+  protected content: HTMLElement;
 
-  constructor(container:HTMLElement,events:IEvents) {
+  constructor(container:HTMLElement,content: HTMLElement, events:IEvents) {
     super(container);
+    this.content = content;
+    this.events = events;
 
     this.body = cloneTemplate('#contacts');
 
@@ -28,7 +32,10 @@ implements IPersonalInfoSecond {
 
 	sv(v: boolean) {
 		if (v) {
-			this.container.replaceChildren(this.body);
+			this.content.replaceChildren(this.body);
+      this.events.emit("modal:open");
+		} else {
+			this.events.emit("modal:close");
 		}
 		this.toggleClass(this.container, 'modal_active', v);
 	}

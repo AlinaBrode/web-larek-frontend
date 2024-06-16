@@ -12,13 +12,17 @@ export class PersonalInfoFirst
 	extends Component<IPersonalInfoFirst>
 	implements IPersonalInfoFirst
 {
-	body: HTMLElement;
-	cardButton: HTMLButtonElement;
-	cashButton: HTMLButtonElement;
-	addressElement: HTMLElement;
+	protected content: HTMLElement;
+	protected body: HTMLElement;
+	protected cardButton: HTMLButtonElement;
+	protected cashButton: HTMLButtonElement;
+	protected addressElement: HTMLElement;
+	protected events: IEvents;
 
-	constructor(container: HTMLElement, events: IEvents) {
+	constructor(container: HTMLElement,content: HTMLElement, events: IEvents) {
 		super(container);
+		this.events = events;
+		this.content = content;
 
 		this.body = cloneTemplate('#order');
 		this.cardButton = ensureElement<HTMLButtonElement>(
@@ -46,7 +50,10 @@ export class PersonalInfoFirst
 
 	sv(v: boolean) {
 		if (v) {
-			this.container.replaceChildren(this.body);
+			this.content.replaceChildren(this.body);
+			this.events.emit("modal:open");
+		} else {
+			this.events.emit("modal:close");
 		}
 		this.toggleClass(this.container, 'modal_active', v);
 	}

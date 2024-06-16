@@ -24,6 +24,7 @@ export class CardPopup extends Component<ICardPopup> implements ICardPopup {
 	protected cardPreviewBody: HTMLElement;
 	protected basketPutGetButton: HTMLButtonElement;
 	protected itemId:string;
+	events: IEvents;
 
 	constructor(container: HTMLElement, content: HTMLElement, events: IEvents) {
 		super(container);
@@ -55,6 +56,7 @@ export class CardPopup extends Component<ICardPopup> implements ICardPopup {
 		closeButton.addEventListener('click', () => {
 			this.sv(false);
 		});
+		this.events = events;
 	}
 
 	set category(val: string) {
@@ -90,7 +92,11 @@ export class CardPopup extends Component<ICardPopup> implements ICardPopup {
 	sv(v: boolean) {
 		if (v) {
 			this.content.replaceChildren(this.cardPreviewBody);
+			this.events.emit("modal:open");
+		} else {
+			this.events.emit("modal:close");
 		}
+
 		this.toggleClass(this.container, 'modal_active', v);
 	}
 }

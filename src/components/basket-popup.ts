@@ -13,6 +13,7 @@ export class Basket extends Component<IBasket> implements IBasket {
 	protected basketBody: HTMLElement;
 	protected basketButton: HTMLButtonElement;
 	protected basketItemsNumberElement: HTMLElement;
+	protected events: IEvents;
 
 	constructor(container: HTMLElement, content: HTMLElement, events: IEvents) {
 		super(container);
@@ -37,6 +38,7 @@ export class Basket extends Component<IBasket> implements IBasket {
 		this.basketButton.addEventListener('click', () =>
 			events.emit('click: basket_button')
 		);
+		this.events = events;
 	}
 
 	set basketItems(items: HTMLElement[]) {
@@ -50,6 +52,9 @@ export class Basket extends Component<IBasket> implements IBasket {
 	sv(v: boolean) {
 		if (v) {
 			this.content.replaceChildren(this.basketBody);
+			this.events.emit("modal:open");
+		} else {
+			this.events.emit("modal:close");
 		}
 		this.toggleClass(this.container, 'modal_active', v);
 	}

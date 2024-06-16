@@ -128,12 +128,12 @@ events.on('click: delete__card', (item: ICardID) => {
 });
 // events.on('items: changed', () => {basketButton.basketCounter = bm.busketItemsNumber()});
 
-let paymentType = new PersonalInfoFirst(modalContainerElement, events);
+let paymentType = new PersonalInfoFirst(modalContainerElement, modalContentElement, events);
 events.on('click: basket_button', () => {
 	paymentType.sv(true);
 });
 
-let personalInfo = new PersonalInfoSecond(modalContainerElement, events);
+let personalInfo = new PersonalInfoSecond(modalContainerElement,modalContentElement, events);
 events.on('click: personal_info_first_next', () => {
 	paymentType.sv(true);
 });
@@ -151,4 +151,14 @@ events.on('click: cash payment', () => {
 
 events.on('items: changed', () => {
 	paymentType.render({paymentType: personalInfoModel.paymentType});
+});
+
+let windowWrapper = ensureElement(".page__wrapper");
+
+events.on('modal:open', () => {
+	windowWrapper.classList.add('page__wrapper_locked');
+});
+
+events.on('modal:close', () => {
+	windowWrapper.classList.remove('page__wrapper_locked');
 });
