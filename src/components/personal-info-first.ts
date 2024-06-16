@@ -43,9 +43,11 @@ export class PersonalInfoFirst
 	}
 
 	set paymentType(val: PaymentTypeEnum) {
-    this.toggleClass(this.cardButton, 'button-alt-active', val === PaymentTypeEnum.ONLINE);
-    this.toggleClass(this.cashButton, 'button-alt-active', val === PaymentTypeEnum.ON_DELIVERY);
+		console.log("render payment type", val);
+    this.toggleClass(this.cardButton, 'button_alt-active', val === PaymentTypeEnum.ONLINE);
+    this.toggleClass(this.cashButton, 'button_alt-active', val === PaymentTypeEnum.ON_DELIVERY);
   }
+	
 	set deliveryAddress(val: string) {}
 
 	sv(v: boolean) {
