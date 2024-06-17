@@ -15,6 +15,7 @@ import { BasketCard } from './components/basket-card';
 import { PersonalInfoFirst } from './components/personal-info-first';
 import { PersonalInfoSecond } from './components/personal-info-second';
 import { PersonalInfoModel } from './components/personal-info-model';
+import { validate } from 'webpack';
 
 /*
   Описание данных
@@ -162,3 +163,17 @@ events.on('modal:open', () => {
 events.on('modal:close', () => {
 	windowWrapper.classList.remove('page__wrapper_locked');
 });
+
+interface IEventText{
+	text:string
+}
+
+events.on('address_input:change',(data:IEventText)=>{
+	personalInfoModel.address = data.text;
+})
+
+function validatePersonalInfoFirstButtonNext(){
+	 paymentType.enableButton = ((personalInfoModel.address !== undefined) && (personalInfoModel.paymentType !== undefined));
+}
+
+events.on("items: changed",validatePersonalInfoFirstButtonNext);
