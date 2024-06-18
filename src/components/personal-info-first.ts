@@ -56,6 +56,11 @@ export class PersonalInfoFirst
 				text: target.value,
 			});
 		});
+		this.orderButton.addEventListener("click",(evt)=>{
+    events.emit('click: personal info first button');
+		evt.preventDefault();
+		}
+		);
 	}
 
 	set paymentType(val: PaymentTypeEnum) {

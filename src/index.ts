@@ -129,12 +129,20 @@ events.on('click: delete__card', (item: ICardID) => {
 });
 // events.on('items: changed', () => {basketButton.basketCounter = bm.busketItemsNumber()});
 
-let paymentType = new PersonalInfoFirst(modalContainerElement, modalContentElement, events);
+let paymentType = new PersonalInfoFirst(
+	modalContainerElement,
+	modalContentElement,
+	events
+);
 events.on('click: basket_button', () => {
 	paymentType.sv(true);
 });
 
-let personalInfo = new PersonalInfoSecond(modalContainerElement,modalContentElement, events);
+let personalInfo = new PersonalInfoSecond(
+	modalContainerElement,
+	modalContentElement,
+	events
+);
 events.on('click: personal_info_first_next', () => {
 	paymentType.sv(true);
 });
@@ -151,10 +159,10 @@ events.on('click: cash payment', () => {
 });
 
 events.on('items: changed', () => {
-	paymentType.render({paymentType: personalInfoModel.paymentType});
+	paymentType.render({ paymentType: personalInfoModel.paymentType });
 });
 
-let windowWrapper = ensureElement(".page__wrapper");
+let windowWrapper = ensureElement('.page__wrapper');
 
 events.on('modal:open', () => {
 	windowWrapper.classList.add('page__wrapper_locked');
@@ -164,16 +172,36 @@ events.on('modal:close', () => {
 	windowWrapper.classList.remove('page__wrapper_locked');
 });
 
-interface IEventText{
-	text:string
+interface IEventText {
+	text: string;
 }
 
-events.on('address_input:change',(data:IEventText)=>{
+events.on('address_input:change', (data: IEventText) => {
 	personalInfoModel.address = data.text;
-})
+});
 
-function validatePersonalInfoFirstButtonNext(){
-	 paymentType.enableButton = ((personalInfoModel.address !== undefined) && (personalInfoModel.paymentType !== undefined));
+function validatePersonalInfoFirstButtonNext() {
+	paymentType.enableButton =
+		personalInfoModel.address !== undefined &&
+		personalInfoModel.paymentType !== undefined;
 }
 
-events.on("items: changed",validatePersonalInfoFirstButtonNext);
+events.on('items: changed', validatePersonalInfoFirstButtonNext);
+events.on('click: personal info first button', () => {
+	paymentType.sv(false);
+	personalInfo.sv(true);
+});
+events.on('email_input:change', (data: IEventText) => {
+	personalInfoModel.email = data.text;
+});
+events.on('phone_input:change', (data: IEventText) => {
+	personalInfoModel.phone = data.text;
+});
+
+function validatePersonalInfoSecondButtonNext() {
+	personalInfo.enableButton =
+		personalInfoModel.email !== undefined &&
+		personalInfoModel.phone !== undefined;
+}
+
+events.on('items: changed', validatePersonalInfoSecondButtonNext);
