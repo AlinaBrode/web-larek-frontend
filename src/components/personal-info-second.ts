@@ -48,6 +48,10 @@ implements IPersonalInfoSecond {
 				text: target.value,
 			});
 		});
+    this.orderButton.addEventListener('click',(evt)=>{
+      evt.preventDefault();
+      this.events.emit('click: personalInfoSecondNext');
+    });
   }
 
   set paymentType (val: string) {

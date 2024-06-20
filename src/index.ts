@@ -16,6 +16,7 @@ import { PersonalInfoFirst } from './components/personal-info-first';
 import { PersonalInfoSecond } from './components/personal-info-second';
 import { PersonalInfoModel } from './components/personal-info-model';
 import { validate } from 'webpack';
+import { Success } from './components/success';
 
 /*
   Описание данных
@@ -205,3 +206,15 @@ function validatePersonalInfoSecondButtonNext() {
 }
 
 events.on('items: changed', validatePersonalInfoSecondButtonNext);
+
+let success = new Success(
+	modalContainerElement,
+	modalContentElement,
+	events
+);
+
+events.on('click: personalInfoSecondNext', ()=>{
+	personalInfo.sv(false);
+	success.sv(true);
+	success.totalPrice = bm.getTotalSum();
+});
