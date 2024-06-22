@@ -2,7 +2,7 @@ import { SellItemAPI } from './components/sell-item-api';
 import './scss/styles.scss';
 import { RepoModel } from './components/repo-model';
 import { SellItem } from './types/sellitem';
-import { PaymentTypeEnum } from './types/index';
+import { PaymentTypeEnum, ICardID, IPutGetEvent, IEventText } from './types/index';
 import { API_URL } from './utils/constants';
 import { cloneTemplate, ensureElement } from './utils/utils';
 import { Gallery } from './components/gallery';
@@ -94,10 +94,6 @@ let cardPopup = new CardPopup(
 	events
 );
 
-interface ICardID {
-	card_id: string;
-}
-
 events.on('click: on_gallery_card', (id: ICardID) => {
 	cardPopup.id = id.card_id;
 	console.log('set id', id.card_id, cardPopup.id);
@@ -106,9 +102,6 @@ events.on('click: on_gallery_card', (id: ICardID) => {
 	cardPopup.sv(true);
 });
 
-interface IPutGetEvent {
-	itemId: string;
-}
 
 events.on('put-get-item', (evt: IPutGetEvent) =>
 	bm.toggleBasketState(evt.itemId)
@@ -173,9 +166,6 @@ events.on('modal:close', () => {
 	windowWrapper.classList.remove('page__wrapper_locked');
 });
 
-interface IEventText {
-	text: string;
-}
 
 events.on('address_input:change', (data: IEventText) => {
 	personalInfoModel.address = data.text;
@@ -217,4 +207,7 @@ events.on('click: personalInfoSecondNext', ()=>{
 	personalInfo.sv(false);
 	success.sv(true);
 	success.totalPrice = bm.getTotalSum();
+});
+events.on('click: order success',()=>{
+	success.sv(false);
 });

@@ -9,3 +9,15 @@ export interface IPersonalInfoModel {
 	email: string;
 	phone: string; 
 }
+
+export interface ICardID {
+	card_id: string;
+}
+
+export interface IPutGetEvent {
+	itemId: string;
+}
+
+export interface IEventText {
+	text: string;
+}
