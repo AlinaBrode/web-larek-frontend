@@ -12,6 +12,6 @@ export interface SellItemsFromAPI {
   items: SellItem[];
 }
 
-export interface SellItemRepo extends SellItem{
+export interface SellItemRepo extends SellItem {
   inBasket: boolean
 }

@@ -46,41 +46,61 @@ yarn build
 
 ## API
 * ISellItemAPI - интерфейс получения товаров с сервера
-  * getSellItems - получить полный список товаров
-  * getOneSellItem - получить один товар
+  * getSellItems(): Promise<SellItemsFromAPI> - получить полный список товаров
+  * getOneSellItem(sellItemID: string): Promise<SellItem>; - получить один товар
   * performPurchase - совершить покупку
 * SellItemAPI - реализация интерфейса получения товаров с сервера
+  * getSellItems(): Promise<SellItemsFromAPI> - получить промис товаров с сервера
+  * getOneSellItem(sellItemID: string): Promise<SellItem> - получить промис описания одного товара
+* Api - класс получения данных с сервера
+  * constructor(baseUrl: string, options: RequestInit = {}) конструктор
+  * get - получить промис ответа
+  * post - отправить данные
 
 ## Данные
 
 * SellItem - описание товара (sellitems.ts)
-  * id - идентификатор товара
-  * category - тип/группа товара
-  * description - название товара
-  * image - картинка
-  * title - заголовок
-  * price - цена (синапсов)
+  * id  string - идентификатор товара
+  * category string - тип/группа товара
+  * description string - название товара
+  * image string - картинка
+  * title string - заголовок
+  * price number - цена (синапсов)
 * IRepo - интерфейс хранилища товаров (repo.ts)
-  * getSellItem - получить товар по его id
-  * setItems - установить набор карточек
-  * delItem - удалить карточку
-  * getCatalogItems - получить карточки для показа в каталоге
-  * getBasketItems - получить карточки из корзины
-  * getTotalSum - получить полную сумму выбранных товаров
-  * busketItemsNumber - полное количество карточек в корзине
-  * toBasket - положить товар в корзину
-  * fromBasket - забрать товар из корзины
+  * getSellItem SellItem - получить товар по его id
+  * setItems void - установить набор карточек
+  * delItem void - удалить карточку
+  * getCatalogItems SellItem[] - получить карточки для показа в каталоге
+  * getBasketItems SellItem[] - получить карточки из корзины
+  * getTotalSum number- получить полную сумму выбранных товаров
+  * busketItemsNumber number - полное количество карточек в корзине
+  * toggleBasketState void - изменить положение товара относительно корзины
+  * inBasket boolean - находится ли товар в корзине
+* RepoModel - реализация хранилища товаров; имплементирует IRepo
+  * protected repoContent: SellItemRepo[] = []; - массив всех товаров
+  * protected events; - диспетчер событий
 * SellItemsFromAPI - как информация о товарах приходит с сервера (sellitems.ts) 
-  * number - количество карточек
-  * SellItem[] - набор карточек
+  * total number - количество карточек
+  * items SellItem[] - набор карточек
 * SellItemRepo - внутренний тип для репозитария товаров, в описание включён флаг принадлежности корзине; расширяет SellItem
-  * inBasket - в корзине ли товар
+  * inBasket boolean - в корзине ли товар
 * IPersonalInfoModel - интерфейс персональных данных:
-  *тип покупки
-  *адрес
-  *емаил 
-  *телефон
-*PersonalInfoModel - персональные данные 
+  * paymentType: PaymentTypeEnum тип покупки
+  * address: string адрес
+  * email: string емаил 
+  * phone: string телефон
+* PersonalInfoModel - персональные данные; имплементирует IPersonalInfoModel
+  * constructor(events:IEvents) - создать объект по диспетчеру событий
+  * set paymentType(val: PaymentTypeEnum) указать тип оплаты
+  * set address(val: string) указать адрес
+	* set email(val: string) указать адрес электронной почты
+	* set phone(val: string) установить телефон
+  * get paymentType() получить тип оплаты
+  * get address() получить адрес
+
+  * get email() получить емайл
+  * get phone() получить телефон
+  
 
 ## Вид (view)
 * ShowItems - все доступные элементы
@@ -88,11 +108,11 @@ yarn build
 * ItemRow - показ одного элемента в корзине
 * PopupItem - показ одного элемента для помещения в корзину/доставания из корзины
 * IGallery - определяет структуру для компонента галереи 
-* Gallery  - реализация интерфейса IGallery и представляет собой 
+* Gallery  - реализация интерфейса IGallery; наследуется от Component
 * IGalleryCard - интерфейса к отображению карточки в галерее
-* GalleryCard - реализация отображения карточки в галерее
-* IOrderSuccess - интерфейс к отображению карточки в галерее
-* OrderSuccess - отображение синапсов,закрытие,открытие карточки
+* GalleryCard - реализация отображения карточки в галерее; наследуется от Component
+* ISuccess - интерфейс к отображению карточки в галерее
+* Success - отображение синапсов,закрытие,открытие карточки
 * IModelCardFull - интерфейс к отображению полной карточки в попапе
    * тип карточки (категория)
    * картинка
@@ -105,16 +125,16 @@ yarn build
    * кнопка в корзину
    * сообщение "onclick: to_basket(item_id)"    
 * IBasket - интерфейс к попапу корзины
-   * список товаров
-   * полная стоимость
-* Basket - попап корзины
+   * basketItems: HTMLElement[]; список товаров
+   * basketTotal: number; полная стоимость
+* Basket - попап корзины; наследуется от Component
    * кнопка "оформить"
    * сообщение "onclick: next"
    * закрыть
 * IBasketCard - интерфейс отображения карточки в корзине
   * заголовок
   * цена
-* BasketCard - элемент отображения карточки в корзинке
+* BasketCard - элемент отображения карточки в корзинке; наследуется от Component
   * кнопка "удалить из корзины"
   * сообщение "onclick: from_basket(item_id)"
 * IPurchaiseDetails - интерфейс попапа данных об оплате
@@ -126,34 +146,48 @@ yarn build
   * поле ввода "Адрес доставки"
   * кнопка "Далее"
   * сообщение "onlick: next_personal_info"
-* IPersonInfoFirst - интерфейс попапа данных об оплате
+* IPersonalInfoFirst - интерфейс попапа данных об оплате
   * почта
   * телефон
-* PersonInfoFirst - попап с первой частью персональной информации
-* IPersonInfoSecond -интерфейс попапа со второй частью
-* PersonInfoSecond - попап ввода деталей об оплате
+* PersonalInfoFirst - попап с первой частью персональной информации; наследуется от Component
+* IPersonalInfoSecond -интерфейс попапа со второй частью
+* PersonalInfoSecond - попап ввода деталей об оплате; наследуется от Component
   * поле ввода "почта"
   * поле ввода "телефон"
   * кнопка "оплатить"
   * сообщение "onlick: next_successful_purchaise"
 * ISuccess - интерфейс к попапу успешной покупки
   * стоимость
-* Success - попап успешной покупки
+* Success - попап успешной покупки; наследуется от Component
   * кнопка "закрыть"
   * кнопка "за новыми покупками"
 * IBasketButton
   * количество товаров в корзине
-* BasketButton
+* BasketButton; наследуется от Component
   * кнопка перехода в форму корзины
   * сообщение "onclick: next_basket_popup"
 * ICardPopup - интерфейс к отображению попап карточки;содержит все поля карточки 
-* CardPopup - попап карточки;отображает картинку,заголовок,описание и цену товара
+* CardPopup - попап карточки;отображает картинку,заголовок,описание и цену товара; наследуется от Component
+* Сomponent - базовый класс html element
+  *  toggleClass - переключить класс у компонента
+  *  setDisabled - переключить недоступность элемента
+  *  setHidden - переключить скрытость элемента
+  *  setVisible - переключить видимость элемента
+  *  setImage - установить изображение
+  *  render - отобразить данные
 
 # События
 ## диспетчер событий
 
 ### Это библиотечный класс, не стали расписывать
 * EventEmitter - брокер событий
+  * constructor
+  * on- установить обработчик на событие
+  * off - снять обработчик
+  * emit - инициировать событие с данными
+  * onAll - Слушать все события
+  * offAll - Сбросить все обработчики
+  * trigge - Сделать коллбек триггер, генерирующий событие при вызове
 * IEvents - интерфейс брокера событий
 
 

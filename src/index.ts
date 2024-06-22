@@ -85,7 +85,7 @@ events.on('items: changed', () => {
 });
 
 events.on('items: changed', () => {
-	basket.bastetItemsNumber = bm.getTotalSum();
+	basket.basketTotal = bm.getTotalSum();
 });
 
 let cardPopup = new CardPopup(

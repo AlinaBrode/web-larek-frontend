@@ -4,7 +4,7 @@ import { IEvents } from './base/events';
 
 export interface IBasket {
 	basketItems: HTMLElement[];
-	bastetItemsNumber: number;
+	basketTotal: number;
 }
 
 export class Basket extends Component<IBasket> implements IBasket {
@@ -45,7 +45,7 @@ export class Basket extends Component<IBasket> implements IBasket {
 		this.basketList.replaceChildren(...items);
 	}
 
-	set bastetItemsNumber(val: number) {
+	set basketTotal(val: number) {
 		this.basketItemsNumberElement.textContent = String(val) + " синапсов";
 	}
 

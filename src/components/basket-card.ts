@@ -6,6 +6,7 @@ export interface IBasketCard {
 	title: string;
 	price: number;
 }
+
 export class BasketCard
 	extends Component<IBasketCard>
 	implements IBasketCard {
