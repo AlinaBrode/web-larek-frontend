@@ -3,8 +3,8 @@ import { Component } from "./base/components";
 import { IEvents } from "./base/events";
 
 export interface IPersonalInfoSecond {
-  paymentType:string;
-  deliveryAddress:string;
+  email: string;
+  phone: string;
   enableButton:boolean;
 }
 
@@ -14,8 +14,8 @@ implements IPersonalInfoSecond {
  protected body:HTMLElement;
   protected events:IEvents;
   protected content: HTMLElement;
-  protected emailElement: HTMLElement;
-  protected phoneElement: HTMLElement;
+  protected emailElement: HTMLInputElement;
+  protected phoneElement: HTMLInputElement;
   protected orderButton : HTMLButtonElement;
 
   constructor(container:HTMLElement,content: HTMLElement, events:IEvents) {
@@ -24,11 +24,11 @@ implements IPersonalInfoSecond {
     this.events = events;
 
     this.body = cloneTemplate('#contacts');
-    this.emailElement = ensureElement(
+    this.emailElement = ensureElement<HTMLInputElement>(
 			'.form__input[name="email"]',
 			this.body
 		);
-    this.phoneElement = ensureElement(
+    this.phoneElement = ensureElement<HTMLInputElement>(
 			'.form__input[name="phone"]',
 			this.body
 		);
@@ -54,12 +54,14 @@ implements IPersonalInfoSecond {
     });
   }
 
-  set paymentType (val: string) {
+  set email (val: string) {
+    this.emailElement.value = val;
+  }
 
+  set phone (val: string) {
+    this.phoneElement.value = val;
   }
- set deliveryAddress (val: string) {
-    
-  }
+
   set enableButton(val:boolean) {
 		this.setDisabled(this.orderButton, !val);
 	}

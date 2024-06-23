@@ -29,7 +29,6 @@ export class Basket extends Component<IBasket> implements IBasket {
 			'.basket__price',
 			this.basketBody
 		);
-		console.log('price element', this.basketItemsNumberElement);
 		let closeButton = ensureElement('.modal__close', this.container);
 		closeButton.addEventListener('click', () => {
 			this.sv(false);

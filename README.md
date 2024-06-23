@@ -97,65 +97,62 @@ yarn build
 	* set phone(val: string) установить телефон
   * get paymentType() получить тип оплаты
   * get address() получить адрес
-
   * get email() получить емайл
   * get phone() получить телефон
   
 
 ## Вид (view)
-* ShowItems - все доступные элементы
-* ItemBox - показ одного элемента в репозитарии
-* ItemRow - показ одного элемента в корзине
-* PopupItem - показ одного элемента для помещения в корзину/доставания из корзины
 * IGallery - определяет структуру для компонента галереи 
+  * galleryItems: HTMLElement[]; - элементы для отображения в галлерее
 * Gallery  - реализация интерфейса IGallery; наследуется от Component
-* IGalleryCard - интерфейса к отображению карточки в галерее
+  * constructor - создать объект
+  * set galleryItems - установить элементы для отображения
+* IGalleryCard - интерфейс к отображению карточки в галерее
+	 * category: string;  - категория
+	 * title: string; - заголовок
+	 * price: number; - цена
+	 * image: string; - картинка
 * GalleryCard - реализация отображения карточки в галерее; наследуется от Component
+   * constructor - создать объект
+   * set category(val: string)  - установить категорию
+   * set title(val: string)  - установить заголовок
+   * set price(val: number)  - установить цену
+   * set image(val: string)  - установить картинку
 * ISuccess - интерфейс к отображению карточки в галерее
+   * totalPrice:number; - полная цена
 * Success - отображение синапсов,закрытие,открытие карточки
-* IModelCardFull - интерфейс к отображению полной карточки в попапе
-   * тип карточки (категория)
-   * картинка
-   * заголовок
-   * описание
-   * кнопка (в корзину / из корзины)
-   * цена
-* ModelCardFull - попап с полной карточкой
-   * кнопка закрытия
-   * кнопка в корзину
-   * сообщение "onclick: to_basket(item_id)"    
+   * constructor - создать объект
+   * set totalPrice(val: number) - отобразить полную цену товаров в корзине
 * IBasket - интерфейс к попапу корзины
    * basketItems: HTMLElement[]; список товаров
    * basketTotal: number; полная стоимость
 * Basket - попап корзины; наследуется от Component
    * кнопка "оформить"
-   * сообщение "onclick: next"
    * закрыть
 * IBasketCard - интерфейс отображения карточки в корзине
-  * заголовок
-  * цена
+  * title: string заголовок
+  * price: number цена
 * BasketCard - элемент отображения карточки в корзинке; наследуется от Component
+  * set title(val: string) - установить заголовок
+  * set price(val: number) - установить цену
   * кнопка "удалить из корзины"
-  * сообщение "onclick: from_basket(item_id)"
-* IPurchaiseDetails - интерфейс попапа данных об оплате
-  * онлайн/при получении
-  * адрес доставки
-* PurchaseDetailsPopup - попап ввода деталей об оплате
-  * кнопка "онлайн"
-  * кнопка "при получении"
-  * поле ввода "Адрес доставки"
-  * кнопка "Далее"
-  * сообщение "onlick: next_personal_info"
 * IPersonalInfoFirst - интерфейс попапа данных об оплате
-  * почта
-  * телефон
+  * paymentType: PaymentTypeEnum; - тип оплаты
+  * deliveryAddress: string; - адрес доставки
+  * enableButton:boolean; - кнопка доступна
 * PersonalInfoFirst - попап с первой частью персональной информации; наследуется от Component
+  * constructor
+  * set paymentType(val: PaymentTypeEnum) - установить тип оплаты
+  * set deliveryAddress(val: string) - установить адрес доставки
+  * set enableButton(val:boolean) - показать кнопку перехода дальше
 * IPersonalInfoSecond -интерфейс попапа со второй частью
+  * email: string; - электронный адрес
+  * phone: string; - телефон 
+  * enableButton:boolean; - показать кнопку дальше
 * PersonalInfoSecond - попап ввода деталей об оплате; наследуется от Component
   * поле ввода "почта"
   * поле ввода "телефон"
   * кнопка "оплатить"
-  * сообщение "onlick: next_successful_purchaise"
 * ISuccess - интерфейс к попапу успешной покупки
   * стоимость
 * Success - попап успешной покупки; наследуется от Component
@@ -165,9 +162,25 @@ yarn build
   * количество товаров в корзине
 * BasketButton; наследуется от Component
   * кнопка перехода в форму корзины
-  * сообщение "onclick: next_basket_popup"
 * ICardPopup - интерфейс к отображению попап карточки;содержит все поля карточки 
+	* category: string; - категория товара
+	* title: string; - заголовок
+	* description: string; - описание
+	* price: number; - цена
+	* image: string; - картинка
+	* id:string; - идентификатор товара
+	* inBasket: boolean; - в корзине ли
+
 * CardPopup - попап карточки;отображает картинку,заголовок,описание и цену товара; наследуется от Component
+	* set category(val: string) - установить категории
+	* set title(val: string) - установить заголовок
+	* set description(val: string) - установить описание 
+	* set price(val: number) - установить цену
+	* set image(val: string) - установить картинку 
+	* set id(val:string) - установить идентификатор товара
+	* get id() - получить идентификатор товара
+	* set inBasket(val: boolean) - отобразить направление перекладывание товара
+
 * Сomponent - базовый класс html element
   *  toggleClass - переключить класс у компонента
   *  setDisabled - переключить недоступность элемента
@@ -192,6 +205,7 @@ yarn build
 
 
 ## События
+### Список событий
 * "click: on_gallery_card" - кликнули на карточку в галерее, параметр - id карточки, {card_id: id}, ICardID
 * "click: next_basket" - событие перехода в попап корзины, возбуждается при клике на корзину
 * "items: changed" - любое изменение в карточках
@@ -211,6 +225,35 @@ yarn build
 * "email_input:change" - изменение емайла
 * "click: personalInfoSecondNext" - щелчок на форме оформить и переход на  форму успешных покупок
 * "click: order success" - кнопка в последней форме
+* "click: delete__card" - параметр {card_id:id} - удаление карточки
+* "put-get-item" - параметр{itemId: this.itemId} - перенести в/из корзину
+* "address_input:change" -  параметр{text: target.value} - адрес изменился
+* "items: changed" - данные изменились
+* "email_input:change" -  параметр{text: target.value} - емаил изменился 
+* "phone_input:change" - параметр{text: target.value} - телефон изменился
+
+### Порядок генерации событий
+#### цепочка с щелчка по карточке
+ * 'click: on_gallery_card' -> презентер, показали попап карточки
+### цепочка с щелчка по корзинке
+ * 'click: on_basket_button' -> презентер, показать попап корзинки
+### цепочка с щелчка по кнопке "добавить/удалить" в карточке товара
+ * 'put-get-item' -> презентер, изменить состояние товара toggleBasketState
+ * toggleBasketState -> модель данных, 'items: changed' - товары изменены
+ * презентер 'items: changed', отобразить статус товара cardPopup.inBasket = bm.inBasket(cardPopup.id)
+### Корзина "оформить"
+ * вид 'click: basket_button' -> презентер, показали попап выбора способа оплаты 
+### Способ оплаты "далее"
+ * вид 'click: personal info first button' -> презентер, показали ввод персональной информации
+### Персональная информация "далее"
+ * вид 'click: personalInfoSecondNext' -> презентер, показали попап "Заказ оформлен"
+### Заказ оформлен "за новыми покупками"
+ * вид 'click: order success' -> презентер, скрыли попап "Заказ оформлен" + через API оформили заказ
+### Корзина "удалить товар"
+  * вид 'click: delete__card',{card_id:id} -> презентер, удалить товар
+  * презентер, удалили товар -> модель данные "items: changed"
+  * презентер, "items: changed" -> bm.getBasketItems() - перересовка содержимого basket
+
 
 
 

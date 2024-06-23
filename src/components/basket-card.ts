@@ -22,11 +22,6 @@ export class BasketCard
       this.elementDeleteButton.addEventListener('click',()=>{
         events.emit('click: delete__card',{card_id:id});
       })
-      
-
-      /*this.container.addEventListener('click', () => {
-        events.emit('click: on_gallery_card', {card_id: id});
-      });*/
     }
 
   set title(val: string) {

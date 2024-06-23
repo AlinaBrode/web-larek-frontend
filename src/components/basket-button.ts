@@ -4,6 +4,7 @@ import { Component } from './base/components';
 export interface IBasketButton {
 	basketCounter: number;
 }
+
 export class BasketButton
 	extends Component<IBasketButton>
 	implements IBasketButton

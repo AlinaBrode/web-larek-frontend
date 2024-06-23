@@ -69,7 +69,6 @@ let basket = new Basket(modalContainerElement, modalContentElement, events);
 
 let basketElement = ensureElement('.header__basket');
 basketElement.addEventListener('click', () => {
-	console.log('basket click');
 	basket.sv(true);
 });
 
@@ -96,7 +95,6 @@ let cardPopup = new CardPopup(
 
 events.on('click: on_gallery_card', (id: ICardID) => {
 	cardPopup.id = id.card_id;
-	console.log('set id', id.card_id, cardPopup.id);
 	cardPopup.render(bm.getSellItem(id.card_id));
 	cardPopup.inBasket = bm.inBasket(cardPopup.id);
 	cardPopup.sv(true);
@@ -106,8 +104,8 @@ events.on('click: on_gallery_card', (id: ICardID) => {
 events.on('put-get-item', (evt: IPutGetEvent) =>
 	bm.toggleBasketState(evt.itemId)
 );
+
 events.on('items: changed', () => {
-	console.log('card popup id', cardPopup.id);
 	if (cardPopup.id) {
 		cardPopup.inBasket = bm.inBasket(cardPopup.id);
 	}
@@ -208,6 +206,7 @@ events.on('click: personalInfoSecondNext', ()=>{
 	success.sv(true);
 	success.totalPrice = bm.getTotalSum();
 });
+
 events.on('click: order success',()=>{
 	success.sv(false);
 });
