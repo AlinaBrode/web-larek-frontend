@@ -1,5 +1,5 @@
 # Проектная работа "Веб-ларек"
-* https://github.com/AlinaBrode/web-larek-frontend-fork
+* https://github.com/AlinaBrode/web-larek-frontend
 
 Стек: HTML, SCSS, TS, Webpack
 
