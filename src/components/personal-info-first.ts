@@ -64,7 +64,6 @@ export class PersonalInfoFirst
 	}
 
 	set paymentType(val: PaymentTypeEnum) {
-		console.log('render payment type', val);
 		this.toggleClass(
 			this.cardButton,
 			'button_alt-active',
