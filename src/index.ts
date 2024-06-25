@@ -1,7 +1,7 @@
 import { SellItemAPI } from './components/sell-item-api';
 import './scss/styles.scss';
 import { RepoModel } from './components/repo-model';
-import { SellItem } from './types/sellitem';
+import { IOrder } from './types/sellitem';
 import { PaymentTypeEnum, ICardID, IPutGetEvent, IEventText } from './types/index';
 import { API_URL } from './utils/constants';
 import { cloneTemplate, ensureElement } from './utils/utils';
@@ -208,5 +208,21 @@ events.on('click: personalInfoSecondNext', ()=>{
 });
 
 events.on('click: order success',()=>{
+
+	let orderToSend = {
+		phone: personalInfoModel.phone,
+		email: personalInfoModel.email,
+		payment: personalInfoModel.paymentType == PaymentTypeEnum.ONLINE ? "online": "on_delivery",
+		address: personalInfoModel.address,
+		total: bm.getTotalSum(),
+		items: bm.getBasketItems().map((item)=>item.id)
+	}
+
+	console.log("order to send", orderToSend);
+
+	apiFetch.putOrder(orderToSend as IOrder)
+	  .then((data)=>console.log("success then", data))
+		.catch((data)=>console.log("success catch", data));
+
 	success.sv(false);
 });
