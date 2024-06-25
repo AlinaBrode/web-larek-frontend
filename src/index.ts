@@ -22,15 +22,21 @@ import { Success } from './components/success';
   Описание данных
 */
 
-let events = new EventEmitter();
-let personalInfoModel = new PersonalInfoModel(events);
+const events = new EventEmitter();
+const personalInfoModel = new PersonalInfoModel(events);
 
-let apiFetch = new SellItemAPI(API_URL);
-let bm = new RepoModel(events);
-let gallery = new Gallery(ensureElement('.gallery'));
+const apiFetch = new SellItemAPI(API_URL);
+const bm = new RepoModel(events);
+const gallery = new Gallery(ensureElement('.gallery'));
 
-function getSellItems() {
+apiFetch.getSellItems().then((response) => {
+	bm.setItems(response.items);
+});
+
+
+function testSellItems() {
 	apiFetch.getSellItems().then((response) => {
+		console.log('sell items response', response);
 		bm.setItems(response.items);
 
 		console.log(bm);
@@ -57,24 +63,22 @@ events.on('items: changed', () => {
 	});
 });
 
-getSellItems();
-
-let modalContainerElement = ensureElement('#modal-container');
-let modalContentElement = ensureElement(
+const modalContainerElement = ensureElement('#modal-container');
+const modalContentElement = ensureElement(
 	'.modal__content',
 	modalContainerElement
 );
 
-let basket = new Basket(modalContainerElement, modalContentElement, events);
+const basket = new Basket(modalContainerElement, modalContentElement, events);
 
-let basketElement = ensureElement('.header__basket');
+const basketElement = ensureElement('.header__basket');
 basketElement.addEventListener('click', () => {
-	basket.sv(true);
+	basket.show(true);
 });
 
 events.on('items: changed', () => {
 	basket.basketItems = bm.getBasketItems().map((element) => {
-		let htmlElement = new BasketCard(
+		const htmlElement = new BasketCard(
 			cloneTemplate('#card-basket'),
 			events,
 			element.id
@@ -86,8 +90,7 @@ events.on('items: changed', () => {
 events.on('items: changed', () => {
 	basket.basketTotal = bm.getTotalSum();
 });
-
-let cardPopup = new CardPopup(
+const cardPopup = new CardPopup(
 	modalContainerElement,
 	modalContentElement,
 	events
@@ -97,7 +100,7 @@ events.on('click: on_gallery_card', (id: ICardID) => {
 	cardPopup.id = id.card_id;
 	cardPopup.render(bm.getSellItem(id.card_id));
 	cardPopup.inBasket = bm.inBasket(cardPopup.id);
-	cardPopup.sv(true);
+	cardPopup.show(true);
 });
 
 
@@ -111,7 +114,7 @@ events.on('items: changed', () => {
 	}
 });
 
-let basketButton = new BasketButton(basketElement);
+const basketButton = new BasketButton(basketElement);
 events.on('items: changed', () => {
 	basketButton.basketCounter = bm.busketItemsNumber();
 });
@@ -121,22 +124,22 @@ events.on('click: delete__card', (item: ICardID) => {
 });
 // events.on('items: changed', () => {basketButton.basketCounter = bm.busketItemsNumber()});
 
-let paymentType = new PersonalInfoFirst(
+const paymentType = new PersonalInfoFirst(
 	modalContainerElement,
 	modalContentElement,
 	events
 );
 events.on('click: basket_button', () => {
-	paymentType.sv(true);
+	paymentType.show(true);
 });
 
-let personalInfo = new PersonalInfoSecond(
+const personalInfo = new PersonalInfoSecond(
 	modalContainerElement,
 	modalContentElement,
 	events
 );
 events.on('click: personal_info_first_next', () => {
-	paymentType.sv(true);
+	paymentType.show(true);
 });
 console.log('personalInfo', personalInfo);
 
@@ -154,7 +157,7 @@ events.on('items: changed', () => {
 	paymentType.render({ paymentType: personalInfoModel.paymentType });
 });
 
-let windowWrapper = ensureElement('.page__wrapper');
+const windowWrapper = ensureElement('.page__wrapper');
 
 events.on('modal:open', () => {
 	windowWrapper.classList.add('page__wrapper_locked');
@@ -177,12 +180,14 @@ function validatePersonalInfoFirstButtonNext() {
 
 events.on('items: changed', validatePersonalInfoFirstButtonNext);
 events.on('click: personal info first button', () => {
-	paymentType.sv(false);
-	personalInfo.sv(true);
+	paymentType.show(false);
+	personalInfo.show(true);
 });
+
 events.on('email_input:change', (data: IEventText) => {
 	personalInfoModel.email = data.text;
 });
+
 events.on('phone_input:change', (data: IEventText) => {
 	personalInfoModel.phone = data.text;
 });
@@ -195,21 +200,21 @@ function validatePersonalInfoSecondButtonNext() {
 
 events.on('items: changed', validatePersonalInfoSecondButtonNext);
 
-let success = new Success(
+const success = new Success(
 	modalContainerElement,
 	modalContentElement,
 	events
 );
 
 events.on('click: personalInfoSecondNext', ()=>{
-	personalInfo.sv(false);
-	success.sv(true);
+	personalInfo.show(false);
+	success.show(true);
 	success.totalPrice = bm.getTotalSum();
 });
 
 events.on('click: order success',()=>{
 
-	let orderToSend = {
+	const orderToSend = {
 		phone: personalInfoModel.phone,
 		email: personalInfoModel.email,
 		payment: personalInfoModel.paymentType == PaymentTypeEnum.ONLINE ? "online": "on_delivery",
@@ -224,5 +229,5 @@ events.on('click: order success',()=>{
 	  .then((data)=>console.log("success then", data))
 		.catch((data)=>console.log("success catch", data));
 
-	success.sv(false);
+	success.show(false);
 });

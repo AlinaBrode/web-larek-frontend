@@ -1,4 +1,5 @@
 import { cloneTemplate, ensureElement } from '../utils/utils';
+import { BasePopup } from './base/base-popup';
 import { Component } from './base/components';
 import { IEvents } from './base/events';
 
@@ -7,21 +8,14 @@ export interface ISuccess {
 }
 
 export class Success
-	extends Component<ISuccess>
+	extends BasePopup<ISuccess>
 	implements ISuccess
 {
-	protected content: HTMLElement;
-	protected body: HTMLElement;
 	protected orderSuccessClose: HTMLButtonElement;
-	protected events: IEvents;
 	protected successDescription: HTMLElement;
 
 	constructor(container: HTMLElement, content: HTMLElement, events: IEvents) {
-		super(container);
-		this.events = events;
-		this.content = content;
-
-		this.body = cloneTemplate('#success');
+		super(container, content, events, cloneTemplate('#success'));
 	
 		this.orderSuccessClose = ensureElement<HTMLButtonElement>(
 			'.order-success__close',
@@ -42,15 +36,5 @@ export class Success
 
 	set totalPrice(val: number) {
 		this.successDescription.textContent = `Списано ${val} синапсов`; 
-	}
-
-	sv(v: boolean) {
-		if (v) {
-			this.content.replaceChildren(this.body);
-			this.events.emit('modal:open');
-		} else {
-			this.events.emit('modal:close');
-		}
-		this.toggleClass(this.container, 'modal_active', v);
 	}
 }

@@ -2,6 +2,7 @@ import { Component } from './base/components';
 import { cloneTemplate, ensureElement } from '../utils/utils';
 import { CDN_URL } from '../utils/constants';
 import { IEvents } from './base/events';
+import { BasePopup } from './base/base-popup';
 
 export interface ICardPopup {
 	category: string;
@@ -13,61 +14,72 @@ export interface ICardPopup {
 	inBasket: boolean;
 }
 
-export class CardPopup extends Component<ICardPopup> implements ICardPopup {
-	protected content: HTMLElement;
-
+export class CardPopup extends BasePopup<ICardPopup> implements ICardPopup {
 	protected elementCategory: HTMLElement;
 	protected elementTitle: HTMLElement;
 	protected elementDescription: HTMLElement;
 	protected elementPrice: HTMLElement;
 	protected elementImage: HTMLImageElement;
-	protected cardPreviewBody: HTMLElement;
 	protected basketPutGetButton: HTMLButtonElement;
 	protected itemId:string;
-	events: IEvents;
+
+	protected currentClass: string;
 
 	constructor(container: HTMLElement, content: HTMLElement, events: IEvents) {
-		super(container);
-		this.content = content;
+		super(container, content, events, cloneTemplate('#card-preview'));
+		
 
-		this.cardPreviewBody = cloneTemplate('#card-preview');
-
-    this.elementCategory = ensureElement('.card__category', this.cardPreviewBody);
-		this.elementTitle = ensureElement('.card__title', this.cardPreviewBody);
+    this.elementCategory = ensureElement('.card__category', this.body);
+		this.elementTitle = ensureElement('.card__title', this.body);
 		this.elementDescription = ensureElement(
 			'.card__text',
-			this.cardPreviewBody
+			this.body
 		);
-		this.elementPrice = ensureElement('.card__price', this.cardPreviewBody);
+		this.elementPrice = ensureElement('.card__price', this.body);
 		this.elementImage = ensureElement<HTMLImageElement>(
 			'.card__image',
-			this.cardPreviewBody
+			this.body
 		);
 		this.basketPutGetButton = ensureElement<HTMLButtonElement>(
 			'.card__button',
-			this.cardPreviewBody
+			this.body
 		);
 		this.basketPutGetButton.addEventListener('click',
 		()=>events.emit('put-get-item',{itemId: this.itemId}));
-		
 
-
-		let closeButton = ensureElement('.modal__close', this.container);
-		closeButton.addEventListener('click', () => {
-			this.sv(false);
-		});
-		this.events = events;
+		this.currentClass = 'card__category_other';
 	}
 
 	set category(val: string) {
 		this.elementCategory.textContent = val;
+
+		this.toggleClass(this.elementCategory, this.currentClass, false);
+
+		if (val == 'софт-скил') {
+			this.currentClass = 'card__category_soft';			
+		} else if (val == 'другое') {
+			this.currentClass = 'card__category_other';			
+		} else if (val == 'дополнительное') {
+			this.currentClass = 'card__category_additional';			
+		} else if (val == 'хард-скил') {
+			this.currentClass = 'card__category_hard';			
+		} else if (val == 'кнопка') {
+			this.currentClass = 'card__category_button';			
+		}
+
+		this.toggleClass(this.elementCategory, this.currentClass, true);
+
+		console.log('val category = ', val);
 	}
+
 	set title(val: string) {
 		this.elementTitle.textContent = val;
 	}
+
 	set description(val: string) {
 		this.elementDescription.textContent = val;
 	}
+
 	set price(val: number) {
 		this.elementPrice.textContent = String(val) + ' синапсов';
 	}
@@ -87,16 +99,5 @@ export class CardPopup extends Component<ICardPopup> implements ICardPopup {
 
 	set inBasket(val: boolean) {
 		this.basketPutGetButton.textContent = val ? "Из корзины" : "В корзину";
-	}
-
-	sv(v: boolean) {
-		if (v) {
-			this.content.replaceChildren(this.cardPreviewBody);
-			this.events.emit("modal:open");
-		} else {
-			this.events.emit("modal:close");
-		}
-
-		this.toggleClass(this.container, 'modal_active', v);
 	}
 }

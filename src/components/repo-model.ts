@@ -16,7 +16,9 @@ export class RepoModel implements IRepo {
   }
 
   setItems(newContent: SellItem[]): void {
+    console.log("new content", newContent);
     this.repoContent = newContent.map(item => ({... item, inBasket: false}));
+    console.log("repo content", this.repoContent);
     this.events.emit('items: changed');
   }
 

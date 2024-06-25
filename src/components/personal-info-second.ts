@@ -1,4 +1,5 @@
 import { cloneTemplate, ensureElement } from "../utils/utils";
+import { BasePopup } from "./base/base-popup";
 import { Component } from "./base/components";
 import { IEvents } from "./base/events";
 
@@ -9,21 +10,15 @@ export interface IPersonalInfoSecond {
 }
 
 export class PersonalInfoSecond
-extends Component<IPersonalInfoSecond>
+extends BasePopup<IPersonalInfoSecond>
 implements IPersonalInfoSecond {
- protected body:HTMLElement;
-  protected events:IEvents;
-  protected content: HTMLElement;
   protected emailElement: HTMLInputElement;
   protected phoneElement: HTMLInputElement;
   protected orderButton : HTMLButtonElement;
 
   constructor(container:HTMLElement,content: HTMLElement, events:IEvents) {
-    super(container);
-    this.content = content;
-    this.events = events;
+    super(container, content, events, cloneTemplate('#contacts'));
 
-    this.body = cloneTemplate('#contacts');
     this.emailElement = ensureElement<HTMLInputElement>(
 			'.form__input[name="email"]',
 			this.body
@@ -64,15 +59,5 @@ implements IPersonalInfoSecond {
 
   set enableButton(val:boolean) {
 		this.setDisabled(this.orderButton, !val);
-	}
-
-	sv(v: boolean) {
-		if (v) {
-			this.content.replaceChildren(this.body);
-      this.events.emit("modal:open");
-		} else {
-			this.events.emit("modal:close");
-		}
-		this.toggleClass(this.container, 'modal_active', v);
 	}
 }

@@ -39,6 +39,7 @@ export abstract class Component<T> {
     protected setVisible(element: HTMLElement) {
         element.style.removeProperty('display');
     }
+    
 
     // Установить изображение с алтернативным текстом
     protected setImage(element: HTMLImageElement, src: string, alt?: string) {

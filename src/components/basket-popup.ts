@@ -1,38 +1,33 @@
-import { Component } from './base/components';
 import { cloneTemplate, ensureElement } from '../utils/utils';
+import { BasePopup } from './base/base-popup';
 import { IEvents } from './base/events';
+
 
 export interface IBasket {
 	basketItems: HTMLElement[];
 	basketTotal: number;
 }
 
-export class Basket extends Component<IBasket> implements IBasket {
-	protected content: HTMLElement;
+export class Basket extends BasePopup<IBasket> implements IBasket {	
 	protected basketList: HTMLElement;
-	protected basketBody: HTMLElement;
 	protected basketButton: HTMLButtonElement;
-	protected basketItemsNumberElement: HTMLElement;
-	protected events: IEvents;
+	protected basketItemsNumberElement: HTMLElement;	
 
 	constructor(container: HTMLElement, content: HTMLElement, events: IEvents) {
-		super(container);
-		this.content = content;
+		const body = cloneTemplate('#basket');
 
-		this.basketBody = cloneTemplate('#basket');
-		this.basketList = ensureElement('.basket__list', this.basketBody);
+		super(container, content, events, body);
+
+
+		this.basketList = ensureElement('.basket__list', this.body);
 		this.basketButton = ensureElement<HTMLButtonElement>(
 			'.basket__button',
-			this.basketBody
+			this.body
 		);
 		this.basketItemsNumberElement = ensureElement(
 			'.basket__price',
-			this.basketBody
+			this.body
 		);
-		let closeButton = ensureElement('.modal__close', this.container);
-		closeButton.addEventListener('click', () => {
-			this.sv(false);
-		});
 
 		this.basketButton.addEventListener('click', () =>
 			events.emit('click: basket_button')
@@ -46,15 +41,5 @@ export class Basket extends Component<IBasket> implements IBasket {
 
 	set basketTotal(val: number) {
 		this.basketItemsNumberElement.textContent = String(val) + " синапсов";
-	}
-
-	sv(v: boolean) {
-		if (v) {
-			this.content.replaceChildren(this.basketBody);
-			this.events.emit("modal:open");
-		} else {
-			this.events.emit("modal:close");
-		}
-		this.toggleClass(this.container, 'modal_active', v);
 	}
 }

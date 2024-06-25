@@ -1,5 +1,6 @@
 import { PaymentTypeEnum } from '../types';
 import { cloneTemplate, ensureElement } from '../utils/utils';
+import { BasePopup } from './base/base-popup';
 import { Component } from './base/components';
 import { IEvents } from './base/events';
 
@@ -10,23 +11,19 @@ export interface IPersonalInfoFirst {
 }
 
 export class PersonalInfoFirst
-	extends Component<IPersonalInfoFirst>
+	extends BasePopup<IPersonalInfoFirst>
 	implements IPersonalInfoFirst
 {
-	protected content: HTMLElement;
-	protected body: HTMLElement;
 	protected cardButton: HTMLButtonElement;
 	protected cashButton: HTMLButtonElement;
 	protected addressElement: HTMLElement;
 	protected orderButton: HTMLButtonElement;
-	protected events: IEvents;
 
 	constructor(container: HTMLElement, content: HTMLElement, events: IEvents) {
-		super(container);
+		super(container, content, events, cloneTemplate('#order'));
 		this.events = events;
 		this.content = content;
 
-		this.body = cloneTemplate('#order');
 		this.cardButton = ensureElement<HTMLButtonElement>(
 			'.button[name="card"]',
 			this.body
@@ -80,15 +77,5 @@ export class PersonalInfoFirst
 
 	set enableButton(val:boolean) {
 		this.setDisabled(this.orderButton, !val);
-	}
-
-	sv(v: boolean) {
-		if (v) {
-			this.content.replaceChildren(this.body);
-			this.events.emit('modal:open');
-		} else {
-			this.events.emit('modal:close');
-		}
-		this.toggleClass(this.container, 'modal_active', v);
 	}
 }
