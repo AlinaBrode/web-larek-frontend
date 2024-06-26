@@ -51,7 +51,7 @@ export class GalleryCard
 		this.elementTitle.textContent = val;
 	}
 	set price(val: number) {
-		this.elementPrice.textContent = String(val) + ' синапсов';
+		this.elementPrice.textContent = val === null ? "бесценно" : String(val) + ' синапсов';
 	}
 	set image(val: string) {
 		this.elementImage.src = CDN_URL + val;

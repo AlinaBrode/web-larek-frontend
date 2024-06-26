@@ -101,7 +101,9 @@ const cardPopup = new CardPopup(
 
 events.on('click: on_gallery_card', (id: ICardID) => {
 	cardPopup.id = id.card_id;
-	cardPopup.render(bm.getSellItem(id.card_id));
+	const itemToSell = bm.getSellItem(id.card_id);
+	cardPopup.basketButtonEnables = itemToSell.price !== null;
+	cardPopup.render(itemToSell);
 	cardPopup.inBasket = bm.inBasket(cardPopup.id);
 	cardPopup.show(true);
 });
@@ -211,11 +213,6 @@ const success = new Success(
 
 events.on('click: personalInfoSecondNext', ()=>{
 	personalInfo.show(false);
-	success.show(true);
-	success.totalPrice = bm.getTotalSum();
-});
-
-events.on('click: order success',()=>{
 
 	const orderToSend = {
 		phone: personalInfoModel.phone,
@@ -226,11 +223,14 @@ events.on('click: order success',()=>{
 		items: bm.getBasketItems().map((item)=>item.id)
 	}
 
-	console.log("order to send", orderToSend);
-
 	apiFetch.putOrder(orderToSend as IOrder)
-	  .then((data)=>console.log("success then", data))
-		.catch((data)=>console.log("success catch", data));
+	  .then(()=>{
+			success.show(true);
+			success.totalPrice = bm.getTotalSum();
+		})
+		.catch((data)=>console.log("payment problems: ", data));
+});
 
+events.on('click: order success',()=>{
 	success.show(false);
 });

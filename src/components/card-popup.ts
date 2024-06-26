@@ -11,6 +11,7 @@ export interface ICardPopup {
 	image: string;
 	id:string;
 	inBasket: boolean;
+	basketButtonEnables: boolean;
 }
 
 export class CardPopup extends BasePopup<ICardPopup> implements ICardPopup {
@@ -68,7 +69,7 @@ export class CardPopup extends BasePopup<ICardPopup> implements ICardPopup {
 	}
 
 	set price(val: number) {
-		this.elementPrice.textContent = String(val) + ' синапсов';
+		this.elementPrice.textContent = val === null ? "бесценно" : String(val) + ' синапсов';
 	}
 
 	set image(val: string) {
@@ -78,6 +79,10 @@ export class CardPopup extends BasePopup<ICardPopup> implements ICardPopup {
 
 	set id(val:string){
 		this.itemId = val;
+	}
+
+	set basketButtonEnables(val: boolean) {
+		this.setDisabled(this.basketPutGetButton, !val);
 	}
 
 	get id(){

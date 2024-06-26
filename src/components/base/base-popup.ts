@@ -18,6 +18,12 @@ export class BasePopup<T> extends Component<T> {
 		closeButton.addEventListener('click', () => {
 			this.show(false);
 		});
+
+		container.addEventListener('click', (evt) => {
+			if (evt.target === this.container) {
+			  this.show(false);
+			}
+		});
 	}
 
 	show(v: boolean) {
