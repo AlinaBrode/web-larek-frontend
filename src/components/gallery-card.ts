@@ -1,5 +1,5 @@
 import { CDN_URL } from '../utils/constants';
-import { ensureElement } from '../utils/utils';
+import { convertSkill2Class, ensureElement } from '../utils/utils';
 import { Component } from './base/components';
 import { IEvents } from './base/events';
 
@@ -19,6 +19,8 @@ export class GalleryCard
 	protected elementPrice: HTMLElement;
 	protected elementImage: HTMLImageElement;
 
+	protected currentClass: string;
+
 	constructor(container: HTMLElement, events: IEvents, id: string) {
 		super(container);
 		this.elementCategory = ensureElement('.card__category', this.container);
@@ -32,10 +34,18 @@ export class GalleryCard
 		this.container.addEventListener('click', () => {
 			events.emit('click: on_gallery_card', {card_id: id});
 		});
+
+		this.currentClass = 'card__category_soft';
 	}
 
 	set category(val: string) {
 		this.elementCategory.textContent = val;
+
+		this.toggleClass(this.elementCategory, this.currentClass, false);
+
+		this.currentClass = convertSkill2Class(val);			
+
+		this.toggleClass(this.elementCategory, this.currentClass, true);
 	}
 	set title(val: string) {
 		this.elementTitle.textContent = val;

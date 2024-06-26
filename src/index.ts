@@ -77,12 +77,15 @@ basketElement.addEventListener('click', () => {
 });
 
 events.on('items: changed', () => {
+	let position = 1;
 	basket.basketItems = bm.getBasketItems().map((element) => {
 		const htmlElement = new BasketCard(
 			cloneTemplate('#card-basket'),
 			events,
 			element.id
 		);
+		htmlElement.listPosition = position;
+		position = position + 1;
 		return htmlElement.render(element);
 	});
 });
@@ -174,8 +177,8 @@ events.on('address_input:change', (data: IEventText) => {
 
 function validatePersonalInfoFirstButtonNext() {
 	paymentType.enableButton =
-		personalInfoModel.address !== undefined &&
-		personalInfoModel.paymentType !== undefined;
+		personalInfoModel.paymentType!== undefined  &&
+		Boolean(personalInfoModel.address);
 }
 
 events.on('items: changed', validatePersonalInfoFirstButtonNext);
@@ -194,8 +197,8 @@ events.on('phone_input:change', (data: IEventText) => {
 
 function validatePersonalInfoSecondButtonNext() {
 	personalInfo.enableButton =
-		personalInfoModel.email !== undefined &&
-		personalInfoModel.phone !== undefined;
+		Boolean(personalInfoModel.email) &&
+		Boolean(personalInfoModel.phone);
 }
 
 events.on('items: changed', validatePersonalInfoSecondButtonNext);

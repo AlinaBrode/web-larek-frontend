@@ -1,5 +1,4 @@
-import { Component } from './base/components';
-import { cloneTemplate, ensureElement } from '../utils/utils';
+import { cloneTemplate, convertSkill2Class, ensureElement } from '../utils/utils';
 import { CDN_URL } from '../utils/constants';
 import { IEvents } from './base/events';
 import { BasePopup } from './base/base-popup';
@@ -55,21 +54,9 @@ export class CardPopup extends BasePopup<ICardPopup> implements ICardPopup {
 
 		this.toggleClass(this.elementCategory, this.currentClass, false);
 
-		if (val == 'софт-скил') {
-			this.currentClass = 'card__category_soft';			
-		} else if (val == 'другое') {
-			this.currentClass = 'card__category_other';			
-		} else if (val == 'дополнительное') {
-			this.currentClass = 'card__category_additional';			
-		} else if (val == 'хард-скил') {
-			this.currentClass = 'card__category_hard';			
-		} else if (val == 'кнопка') {
-			this.currentClass = 'card__category_button';			
-		}
+		this.currentClass = convertSkill2Class(val);			
 
 		this.toggleClass(this.elementCategory, this.currentClass, true);
-
-		console.log('val category = ', val);
 	}
 
 	set title(val: string) {
