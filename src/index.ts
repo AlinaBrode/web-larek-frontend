@@ -227,6 +227,7 @@ events.on('click: personalInfoSecondNext', ()=>{
 	  .then(()=>{
 			success.show(true);
 			success.totalPrice = bm.getTotalSum();
+			bm.clearBasket();
 		})
 		.catch((data)=>console.log("payment problems: ", data));
 });

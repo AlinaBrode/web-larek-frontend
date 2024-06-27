@@ -87,6 +87,7 @@ yarn build
   * busketItemsNumber number - полное количество карточек в корзине
   * toggleBasketState void - изменить положение товара относительно корзины
   * inBasket boolean - находится ли товар в корзине
+  * clearBasket - очистить корзину
 * RepoModel - реализация хранилища товаров; имплементирует IRepo
   * protected repoContent: SellItemRepo[] = []; - массив всех товаров
   * protected events; - диспетчер событий

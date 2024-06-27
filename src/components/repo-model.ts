@@ -67,4 +67,11 @@ export class RepoModel implements IRepo {
     }
     return this.repoContent.filter(item => item.id === id)[0].inBasket;
   }
+
+  clearBasket() {
+    for(let ind = 0; ind<this.repoContent.length;ind++) {
+      this.repoContent[ind].inBasket = false;
+    }
+    this.events.emit('items: changed');
+  }
 }
