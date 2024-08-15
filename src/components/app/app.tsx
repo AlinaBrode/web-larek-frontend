@@ -12,12 +12,20 @@ import '../../index.css';
 import styles from './app.module.css';
 
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
-import { Route, Routes } from 'react-router-dom';
+import {
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+  useParams
+} from 'react-router-dom';
 import { ProtectedRoute } from '../ProtectedRoute';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const App = () => {
   const [isAuthorized, setIsAuthorized] = useState(true);
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -70,7 +78,7 @@ const App = () => {
           <Route
             path='/feed/:number'
             element={
-              <Modal title='order info' onClose={() => {}}>
+              <Modal title='order info' onClose={() => navigate(-1)}>
                 <OrderInfo />
               </Modal>
             }
@@ -78,7 +86,12 @@ const App = () => {
           <Route
             path='/ingredients/:id'
             element={
-              <Modal title='order info' onClose={() => {}}>
+              <Modal
+                title='order info'
+                onClose={() => {
+                  navigate(-1);
+                }}
+              >
                 <IngredientDetails />
               </Modal>
             }
@@ -86,7 +99,7 @@ const App = () => {
           <Route
             path='/profile/orders/:number'
             element={
-              <Modal title='order info' onClose={() => {}}>
+              <Modal title='order info' onClose={() => navigate(-1)}>
                 <OrderInfo />
               </Modal>
             }

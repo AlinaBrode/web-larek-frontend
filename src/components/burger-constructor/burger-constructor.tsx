@@ -3,15 +3,18 @@ import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { RootState, useSelector } from '../../services/store';
 
+type TBun = { price: number };
+
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
   const { ingredients } = useSelector((state: RootState) => state.ingredients);
 
-  const constructorItems = {
-    bun: ingredients.filter((item) => item.type === 'bun')[0],
-    ingredients: ingredients
-      .filter((item) => item.type !== 'bun')
-      .map((item) => ({ ...item, id: item._id }))
+  const constructorItems: {
+    bun: TBun | null;
+    ingredients: TConstructorIngredient[];
+  } = {
+    bun: null,
+    ingredients: []
   };
 
   const orderRequest = false;
