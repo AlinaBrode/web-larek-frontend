@@ -8,14 +8,7 @@ type TBun = { price: number };
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
   const { ingredients } = useSelector((state: RootState) => state.ingredients);
-
-  const constructorItems: {
-    bun: TBun | null;
-    ingredients: TConstructorIngredient[];
-  } = {
-    bun: null,
-    ingredients: []
-  };
+  const { constructorItems } = useSelector((state: RootState) => state.burger);
 
   const orderRequest = false;
 
