@@ -3,13 +3,16 @@ import { useLocation } from 'react-router-dom';
 
 import { BurgerIngredientUI } from '@ui';
 import { TBurgerIngredientProps } from './type';
+import { useDispatch } from 'react-redux';
+import { addIngredient } from '../../services/slices/burger-slice';
 
 export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
   ({ ingredient, count }) => {
+    const dispatch = useDispatch();
     const location = useLocation();
 
     const handleAdd = () => {
-      console.log('handle add', ingredient);
+      dispatch(addIngredient(ingredient));
     };
 
     return (
