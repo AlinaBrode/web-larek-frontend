@@ -2,20 +2,28 @@ import { FC, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
+import { RootState, useSelector } from '../../services/store';
 
 export const OrderInfo: FC = () => {
-  /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0
-  };
+  /** TODO: взяли; почему не отображается? взять переменные orderData и ingredients из стора */
+  const { newOrderResponse } = useSelector((state: RootState) => state.order);
+  const ingredientsStore = useSelector((state: RootState) => state.ingredients);
 
-  const ingredients: TIngredient[] = [];
+  const orderData = newOrderResponse
+    ? newOrderResponse.order
+    : {
+        createdAt: '',
+        ingredients: [],
+        _id: '',
+        status: '',
+        name: '',
+        updatedAt: 'string',
+        number: 0
+      };
+
+  const ingredients: TIngredient[] = ingredientsStore.ingredients
+    ? ingredientsStore.ingredients
+    : [];
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {

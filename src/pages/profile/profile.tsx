@@ -1,12 +1,16 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { RootState, useSelector } from '../../services/store';
 
 export const Profile: FC = () => {
   /** TODO: взять переменную из стора */
-  const user = {
+  const emptyUser = {
     name: '',
     email: ''
   };
+
+  const { data } = useSelector((state: RootState) => state.user);
+  const user = data ? data : emptyUser;
 
   const [formValue, setFormValue] = useState({
     name: user.name,
@@ -15,11 +19,13 @@ export const Profile: FC = () => {
   });
 
   useEffect(() => {
-    setFormValue((prevState) => ({
-      ...prevState,
-      name: user?.name || '',
-      email: user?.email || ''
-    }));
+    if (user.name !== formValue.name || user.email !== formValue.email) {
+      setFormValue((prevState) => ({
+        ...prevState,
+        name: user?.name || '',
+        email: user?.email || ''
+      }));
+    }
   }, [user]);
 
   const isFormChanged =
