@@ -11,7 +11,7 @@ export const loginUser = createAsyncThunk(
 interface TUserState {
   isAuthChecked: boolean;
   isAuthenticated: boolean;
-  data: TUser | null;
+  data: TUser;
   loginUserError: string | null;
   loginUserRequest: boolean;
 }
@@ -19,7 +19,7 @@ interface TUserState {
 const initialState: TUserState = {
   isAuthChecked: false, // флаг для статуса проверки токена пользователя
   isAuthenticated: false,
-  data: null,
+  data: { email: '', name: '' },
   loginUserError: null,
   loginUserRequest: false
 };
@@ -27,7 +27,11 @@ const initialState: TUserState = {
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    setUserData: (state, action) => {
+      state.data = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
@@ -54,3 +58,4 @@ export const userSlice = createSlice({
 });
 
 export default userSlice.reducer;
+export const { setUserData } = userSlice.actions;
