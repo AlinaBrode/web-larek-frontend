@@ -2,12 +2,6 @@ import { loginUserApi, TRegisterData } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TUser } from '@utils-types';
 
-export const loginUser = createAsyncThunk(
-  'user/loginUser',
-  async ({ email, password }: Omit<TRegisterData, 'name'>) =>
-    await loginUserApi({ email, password })
-);
-
 interface TUserState {
   isAuthChecked: boolean;
   isAuthenticated: boolean;
@@ -24,19 +18,22 @@ const initialState: TUserState = {
   loginUserRequest: false
 };
 
+export const loginUser = createAsyncThunk(
+  'user/loginUser',
+  async ({ email, password }: Omit<TRegisterData, 'name'>) =>
+    await loginUserApi({ email, password })
+);
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {
-    setUserData: (state, action) => {
-      state.data = action.payload;
-    }
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
         state.loginUserRequest = true;
         state.loginUserError = null;
+        console.log('user penging');
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loginUserRequest = false;
@@ -47,15 +44,16 @@ export const userSlice = createSlice({
               ? action.error.message
               : 'An unknown error occurred';
         state.isAuthChecked = true;
+        console.log('user rejected', action.payload);
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.data = action.payload.user;
         state.loginUserRequest = false;
         state.isAuthenticated = true;
         state.isAuthChecked = true;
+        console.log('user fulfilled', action.payload);
       });
   }
 });
 
 export default userSlice.reducer;
-export const { setUserData } = userSlice.actions;

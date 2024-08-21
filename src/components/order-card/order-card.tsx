@@ -13,11 +13,6 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
 
   const { ingredients } = useSelector((state: RootState) => state.ingredients);
 
-  useEffect(
-    () => console.log('ingredients in feed', ingredients),
-    [ingredients]
-  );
-
   const orderInfo = useMemo(() => {
     if (!ingredients.length) return null;
 

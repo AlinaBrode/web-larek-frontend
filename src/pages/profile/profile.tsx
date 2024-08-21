@@ -1,7 +1,7 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { RootState, useDispatch, useSelector } from '../../services/store';
-import { setUserData } from '../../services/slices/user-slice';
+import { loginUser } from '../../services/slices/user-slice';
 
 export const Profile: FC = () => {
   const { data } = useSelector((state: RootState) => state.user);
@@ -28,7 +28,7 @@ export const Profile: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    dispatch(setUserData(formValue));
+    dispatch(loginUser(formValue));
   };
 
   const handleCancel = (e: SyntheticEvent) => {
