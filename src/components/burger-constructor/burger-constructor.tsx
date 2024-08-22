@@ -11,6 +11,7 @@ export const BurgerConstructor: FC = () => {
   const { orderRequest, newOrderResponse } = useSelector(
     (state: RootState) => state.order
   );
+  const { isAuthenticated } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
 
   // const orderRequest = false;
@@ -23,6 +24,12 @@ export const BurgerConstructor: FC = () => {
 
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
+
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+
     dispatch(
       fetchOrder([
         constructorItems.bun._id,

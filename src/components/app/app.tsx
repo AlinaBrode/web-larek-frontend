@@ -19,12 +19,12 @@ import {
   useNavigate,
   useParams
 } from 'react-router-dom';
-import { ProtectedRoute } from '../ProtectedRoute';
+import { ProtectedRoute } from '../protected-route/protected-route';
 import { useEffect, useState } from 'react';
+import { RootState, useSelector } from '../../services/store';
 
 const App = () => {
-  const [isAuthorized, setIsAuthorized] = useState(true);
-
+  const { isAuthenticated } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
 
   return (
@@ -35,26 +35,12 @@ const App = () => {
           <Route path='/' element={<ConstructorPage />} />
           <Route path='/feed' element={<Feed />} />
           <Route path='*' element={<NotFound404 />} />
-          <Route
-            path='/login'
-            element={
-              <ProtectedRoute isAuthorized={isAuthorized}>
-                <Login />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/register'
-            element={
-              <ProtectedRoute isAuthorized={isAuthorized}>
-                <Register />
-              </ProtectedRoute>
-            }
-          />
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
           <Route
             path='/forgot-password'
             element={
-              <ProtectedRoute isAuthorized={isAuthorized}>
+              <ProtectedRoute isAuthorized={isAuthenticated}>
                 <ForgotPassword />
               </ProtectedRoute>
             }
@@ -62,7 +48,7 @@ const App = () => {
           <Route
             path='/profile'
             element={
-              <ProtectedRoute isAuthorized={isAuthorized}>
+              <ProtectedRoute isAuthorized={isAuthenticated}>
                 <Profile />
               </ProtectedRoute>
             }
@@ -70,7 +56,7 @@ const App = () => {
           <Route
             path='/profile/orders'
             element={
-              <ProtectedRoute isAuthorized={isAuthorized}>
+              <ProtectedRoute isAuthorized={isAuthenticated}>
                 <ProfileOrders />
               </ProtectedRoute>
             }
